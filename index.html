@@ -288,7 +288,7 @@
 </div>
 
 <div class="hero">
-  <div class="hero-eyebrow">El Paso, TX · Local Pickup, Public Meet Up, Delivery Within Resonable Distance</div>
+  <div class="hero-eyebrow">El Paso, TX · Local Pickup Only</div>
   <h1 class="hero-title">5 and Dime<span>Online Deals</span></h1>
   <p class="hero-sub">Quality items purged from my personal garage — priced to move fast. New in box, quality returns, lightly used, and everything in between.</p>
   <div class="hero-badges">
@@ -438,7 +438,7 @@
 //  Get it from formspree.io → New Form → copy the URL
 //  It will look like: https://formspree.io/f/abcdefgh
 // ════════════════════════════════════════════════════════
-const FORMSPREE_URL = 'https://formspree.io/f/xeeldkoa'
+const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID'
 
 // ════════════════════════════════════════════════════════
 //  YOUR INVENTORY
@@ -452,13 +452,7 @@ const INVENTORY = [
     id:1,
     title:'Fisher-Price Imaginext Trolls Rainbow Treehouse',
     desc:'Lights and sounds, DreamWorks themed. Still in original box, never fully assembled. Great gift.',
-    price:20, condition:'New in Box', status:'available', 
-    photos:[
-      'https://i.postimg.cc/nVmP8sdM/D1.jpg',
-      'https://i.postimg.cc/k42XMNVP/D2.jpg',
-      'https://i.postimg.cc/K8QZnpBZ/D3.jpg',
-    ], 
-    premium:false
+    price:20, condition:'New in Box', status:'available', photos:[], premium:false
   },
   {
     id:2,
@@ -476,13 +470,7 @@ const INVENTORY = [
     id:4,
     title:'Mixed Electronics Accessories Lot',
     desc:'Assorted cables, USB-C chargers, phone holders. All tested and working. Great value bundle.',
-    price:10, condition:'Misc', status:'available', 
-    photos:[
-
-
-
-      
-    ], premium:false
+    price:10, condition:'Misc', status:'available', photos:[], premium:false
   },
   {
     id:5,
@@ -675,7 +663,7 @@ function buildCarousel(item) {
   const photos = item.photos || []
   const sold   = item.status === 'sold'
   const pend   = item.status === 'pending'
-  const pj     = JSON.stringify(photos)
+  const pj     = JSON.stringify(photos).replace(/"/g, "'")
 
   if (!photos.length) {
     return `<div class="carousel">
