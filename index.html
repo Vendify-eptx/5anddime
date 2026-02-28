@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -21,7 +21,7 @@
 
   /* TICKER */
   .ticker{background:var(--gold);color:#0a0800;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;padding:7px 0;overflow:hidden;white-space:nowrap;}
-  .ticker-inner{display:inline-block;animation:tick 35s linear infinite;}
+  .ticker-inner{display:flex;flex-shrink:0;min-width:100%;animation:tick 40s linear infinite;will-change:transform;}
   @keyframes tick{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 
   /* HERO */
