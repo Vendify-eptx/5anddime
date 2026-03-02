@@ -508,7 +508,7 @@ const INVENTORY = [
   {
     id:101,
     title:'Ariat Savannah H2O Boots',
-    desc:'',
+    desc:"",
     price:85, condition:'New in Box', status:'available', photos:[], premium:true
   },
   {
@@ -753,9 +753,9 @@ function buildCard(item) {
   return `<div class="card${item.premium?' premium':''}">
     ${buildCarousel(item)}
     <div class="card-body">
-      <div class="card-title">${item.title}</div>
+      <div class="card-title">${escHtml(item.title)}</div>
       <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
-      <p class="card-desc">${item.desc}</p>
+      <p class="card-desc">${escHtml(item.desc)}</p>
     </div>
     <div class="card-actions">${reserveBtn}${askBtn}</div>
   </div>`
