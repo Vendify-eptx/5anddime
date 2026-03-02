@@ -20,7 +20,7 @@
   body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;}
 
   /* TICKER */
-  .ticker{background:var(--gold);color:#0a0800;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;padding:7px 0;overflow:hidden;white-space:nowrap;}
+  .ticker{background:var(--gold);color:#0a0800;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;padding:7px 0;overflow:hidden;white-space:nowrap;display:flex}
   .ticker-inner{display:flex;flex-shrink:0;min-width:100%;animation:tick 40s linear infinite;will-change:transform;}
   @keyframes tick{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
 
