@@ -759,7 +759,7 @@ function escHtml(str) {
   return `<div class="card${item.premium?' premium':''}">
     ${buildCarousel(item)}
     <div class="card-body">
-      <div class="card-title">${item.title}</div>
+      <div class="card-title">${escHtml(item.title)}</div>
       <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
       <p class="card-desc">${item.desc}</p>
     </div>
