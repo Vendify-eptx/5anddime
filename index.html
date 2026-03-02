@@ -454,7 +454,7 @@ const INVENTORY = [
   {
     id:1,
     title:'FISHERPRICE DreamWorks Trolls Toy Rainbow Treehouse',
-    desc:'<strong>RETAILS for $59.98</strong> - Lights and sounds, DreamWorks themed. Still in original box, Condition Notes: Dimensions: 5.31 x 16.5 x 16 inches. Box slightly damaged seen in photos. Product is fully intact.never fully assembled. Great gift.',
+    desc:'<b>RETAILS for $59.98</b>  - Lights and sounds, DreamWorks themed. Still in original box, Condition Notes: Dimensions: 5.31 x 16.5 x 16 inches. Box slightly damaged seen in photos. Product is fully intact.never fully assembled. Great gift.',
     price:25, condition:'New in Box', status:'available', 
     photos:[
       'https://i.postimg.cc/g2Xw42Qv/T1.jpg',
@@ -508,7 +508,7 @@ const INVENTORY = [
   {
     id:101,
     title:'Brand New Ariat Savannah H2O Waterproof Boots - Never Worn!',
-    desc:"Size: Women's 11B (Medium Width) <br> Color: Tan/Brown Two-Tone <br> | Style: 10042452 <br>| Retail: $219.95 | Condition: New With Tags | Features: Waterproof Pro breathable membrane <br>Full-grain leather lower, ATS technology for all-day comfort <br> YKK side zipper, Non-marking Duratread rubber outsole, 7 inch shaft height",
+    desc:"Size: Women's 11B (Medium Width) Color: Tan/Brown Two-Tone  | Style: 10042452 | Retail: $219.95 | Condition: New With Tags | Features: Waterproof Pro breathable membrane Full-grain leather lower, ATS technology for all-day comfort YKK side zipper, Non-marking Duratread rubber outsole, 7 inch shaft height",
     price:85, condition:'New in Box', status:'available', 
     photos:[
       'https://i.postimg.cc/7hd79JHv/A1.jpg',
@@ -742,12 +742,7 @@ function carouselGo(dot,idx,e) {
 }
 
 // ── CARD BUILD ────────────────────────────────────────
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-}
+
   function buildCard(item) {
   const c    = CONDITIONS[item.condition]||{cls:'cond-misc',icon:'📦',label:item.condition.toUpperCase()}
   const sold = item.status==='sold'
@@ -767,7 +762,7 @@ function escHtml(str) {
     <div class="card-body">
       <div class="card-title">${item.title}</div>
       <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
-      <<p class="card-desc">${item.desc}</p>
+      <p class="card-desc">${item.desc}</p>
     </div>
     <div class="card-actions">${reserveBtn}${askBtn}</div>
   </div>`
