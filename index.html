@@ -736,7 +736,13 @@ function carouselGo(dot,idx,e) {
 }
 
 // ── CARD BUILD ────────────────────────────────────────
-function buildCard(item) {
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+  function buildCard(item) {
   const c    = CONDITIONS[item.condition]||{cls:'cond-misc',icon:'📦',label:item.condition.toUpperCase()}
   const sold = item.status==='sold'
   const pend = item.status==='pending'
