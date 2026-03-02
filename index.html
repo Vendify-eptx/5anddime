@@ -508,8 +508,14 @@ const INVENTORY = [
   {
     id:101,
     title:'Brand New Ariat Savannah H2O Waterproof Boots - Never Worn!',
-    desc:"Size: Women's 11B (Medium Width) | Color: Tan/Brown Two-Tone | Style: 10042452 | Retail: $219.95 | Condition: New With Tags | Features: Waterproof Pro breathable membrane, Full-grain leather lower, ATS technology for all-day comfort, YKK side zipper, Non-marking Duratread rubber outsole, 7 inch shaft height",
-    price:85, condition:'New in Box', status:'available', photos:[], premium:true
+    desc:"Size: Women's 11B (Medium Width) <br> Color: Tan/Brown Two-Tone <br> | Style: 10042452 <br>| Retail: $219.95 | Condition: New With Tags | Features: Waterproof Pro breathable membrane <br>Full-grain leather lower, ATS technology for all-day comfort <br> YKK side zipper, Non-marking Duratread rubber outsole, 7 inch shaft height",
+    price:85, condition:'New in Box', status:'available', 
+    photos:[
+      'https://i.postimg.cc/7hd79JHv/A1.jpg',
+      'https://i.postimg.cc/GpKyN5Lf/A2.jpg',
+      'https://i.postimg.cc/yxg3D6mY/A3.jpg',
+    ], 
+    premium:true
   },
   {
     id:102,
@@ -759,9 +765,9 @@ function escHtml(str) {
   return `<div class="card${item.premium?' premium':''}">
     ${buildCarousel(item)}
     <div class="card-body">
-      <div class="card-title">${escHtml(item.title)}</div>
+      <div class="card-title">${item.title}</div>
       <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
-      <p class="card-desc">${escHtml(item.desc)}</p>
+      <<p class="card-desc">${item.desc}</p>
     </div>
     <div class="card-actions">${reserveBtn}${askBtn}</div>
   </div>`
