@@ -318,6 +318,10 @@
   .disclaimer-body p{margin-bottom:10px;}
   .disclaimer-body p:last-child{margin-bottom:0;}
   .disclaimer-body strong{color:#f5c500;font-style:normal;}
+
+  .back-to-top{position:fixed;bottom:24px;right:24px;width:46px;height:46px;background:#c0392b;border:2px solid #f5c500;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:999;box-shadow:3px 4px 12px #00000066;font-size:20px;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;transform:translateY(10px);}
+  .back-to-top.visible{opacity:1;pointer-events:all;transform:translateY(0);}
+  .back-to-top:hover{background:#a0201a;transform:translateY(-3px);}
 </style>
 </head>
 <body>
@@ -331,7 +335,7 @@
   <div class="hero-eyebrow">📍 El Paso, TX &nbsp;·&nbsp; Local Pickup &nbsp;·&nbsp; Meet-Up &nbsp;·&nbsp; Shipping Available</div>
   <h1 class="hero-title">5 &amp; Dime<span>Online Deals</span></h1>
   <div class="hero-tagline">💰 Real Deals. Real Savings. Every Single Item.</div>
-  <p class="hero-sub">Liquidation Finds, Quality Returns &amp; In-Box Treasures — Priced to move fast.<br>New items listed constantly. First Found, First Served.</p>
+  <p class="hero-sub">Liquidation finds, quality returns &amp; in-box treasures — priced to move fast.<br>New items listed constantly. First come, first served.</p>
   <div class="hero-badges">
     <span class="badge">📦 New in Box</span>
     <span class="badge">🔄 Quality Returns</span>
@@ -354,13 +358,12 @@
 
 <div class="main">
   <div class="rules">
-    <div class="rule"><div class="rule-dot"></div>First Found, First Served</div>
+    <div class="rule"><div class="rule-dot"></div>First come, first served</div>
     <div class="rule"><div class="rule-dot"></div>Reserves Require a 20% Deposit</div>
     <div class="rule"><div class="rule-dot"></div>Deposits Non-Refundable</div>
     <div class="rule"><div class="rule-dot"></div>ALL SALES FINAL — NO RETURNS or REFUNDS</div>
     <div class="rule"><div class="rule-dot"></div>Local Pickup, Door Drop-off, Meet Up Within Reasonable Distance or Shipping Available · El Paso, TX</div>
     <div class="rule"><div class="rule-dot"></div>"GARAGE SALE" Flash Shopping Posted with Weekend Dates and Times</div>
-    <div class="rule"><div class="rule-dot"></div>SORRY NOT TRADES ON ITEMS</div>
   </div>
 
   <div class="filters">
@@ -374,6 +377,7 @@
     <button class="filter-btn" onclick="filterPrice(30,this)">$30</button>
     <button class="filter-btn" onclick="filterPrice(40,this)">$40</button>
     <button class="filter-btn" onclick="filterPrice(50,this)">$50</button>
+    <button class="filter-btn" style="border-color:#c8920a;color:#c8920a;" onclick="scrollToPremium(this)">⭐ Premium</button>
     <button class="filter-btn garage-btn" onclick="scrollToGarage(this)">🏠 Garage</button>
     <button class="filter-btn" style="border-color:#a07040;color:#a07040;" onclick="scrollToDisclaimer(this)">📋 Policy</button>
   </div>
@@ -385,7 +389,7 @@
   </div>
   <div class="grid" id="main-grid"></div>
 
-  <div class="premium-section">
+  <div class="premium-section" id="premium-section">
     <div class="premium-eyebrow">⭐ Special Section</div>
     <div class="section-header" style="margin-bottom:10px;">
       <h2 class="section-label">Premium Finds</h2>
@@ -395,9 +399,7 @@
     <p class="premium-desc">⭐ &nbsp; Name brands &amp; sealed finds that retail for $50+ — yours for a fraction of the price. &nbsp;|&nbsp; Too good for a dime, still the best deal around. &nbsp; ⭐</p>
     <div class="grid" id="premium-grid"></div>
   </div>
-</div>
 
-<footer>
   <div class="garage-section" id="garage-section">
     <div class="garage-header-box">
       <div class="garage-header-eyebrow">🏠 Cleanout Special</div>
@@ -421,8 +423,12 @@
       </div>
     </div>
   </div>
+</div>
 
-  <p>© 2026 5 and Dime Online Deals &nbsp;·&nbsp; El Paso, TX &nbsp;·&nbsp; All sales final</p>
+</main>
+<footer>
+
+  <p>© 2025 5 and Dime Online Deals &nbsp;·&nbsp; El Paso, TX &nbsp;·&nbsp; All sales final</p>
 </footer>
 
 <!-- LIGHTBOX -->
@@ -542,7 +548,7 @@ const INVENTORY = [
     id:7,
     title:'Loungefly Elf Candy Cane Forest Mini Backpack - New With Tags ($75 Retail)',
     desc:"<b>Style #:</b> ELFBK0002 | <b>Original Retail: $75+ </b> <br> <b>Condition:</b> New With Tags <br>Features the iconic quote: <b>'I Passed Through the Seven Levels of the Candy Cane Forest'</b> <br><b>Design Details:</b> - Bright turquoise blue with full-color Elf movie print - Buddy the Elf characters throughout - Candy canes, gumdrops, and snowflakes pattern - Adjustable padded straps - Top carry handle - Multiple zipper compartments (front pocket + main compartment) - Side water bottle pocket - Interior lining with coordinating design - Silver-tone hardware throughout",
-    price:40, retailPrice:79.95, condition:'New in Box', status:'available', newArrival:false, wow:'WOW!', 
+    price:40, condition:'New in Box', status:'available', newArrival:true, wow:'STEAL!', 
     photos:[
       'https://i.postimg.cc/1t6nZGqd/E1.jpg',
       'https://i.postimg.cc/KvQKFv1y/E2.jpg',
@@ -814,6 +820,11 @@ function render() {
   document.getElementById('premium-count').textContent = `${prem.filter(i=>i.status==='available').length} available · ${prem.length} total`
 }
 
+function scrollToPremium(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('premium-section').scrollIntoView({behavior:'smooth', block:'start'});
+}
 function scrollToDisclaimer(btn) {
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -847,6 +858,13 @@ document.getElementById('lightbox').addEventListener('touchend',  e=>{
 })
 
 render()
+
+window.addEventListener('scroll',()=>{
+  const btn = document.getElementById('backToTop');
+  if(window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
 </script>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to Top">⬆</button>
 </body>
 </html>
