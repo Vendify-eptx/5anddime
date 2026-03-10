@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>5 and Dime Online Deals — El Paso's Best Resell Finds</title>
+<title>5 and Dime Online Finds — El Paso's Best Resell Finds</title>
 <meta name="description" content="Quality Items at Unbeatable Prices. New in box, Quality Returns, Lightly Used. Luck Find SEALED Items. Browse and reserve online — pickup El Paso, TX." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet" />
@@ -333,9 +333,9 @@
 
 <div class="hero">
   <div class="hero-eyebrow">📍 El Paso, TX &nbsp;·&nbsp; Local Pickup &nbsp;·&nbsp; Meet-Up &nbsp;·&nbsp; Shipping Available</div>
-  <h1 class="hero-title">5 &amp; Dime<span>Online Deals</span></h1>
+  <h1 class="hero-title">5 &amp; Dime<span>Online Finds</span></h1>
   <div class="hero-tagline">💰 Real Deals. Real Savings. Every Single Item.</div>
-  <p class="hero-sub">Liquidation finds, Quality returns &amp; In-box Treasures — Priced to move fast.<br>New items listed daily. First Found, First Served.</p>
+  <p class="hero-sub">Liquidation finds, Quality returns, Name Brands Finds! &amp; In-box Treasures <br>Priced to move fast.<br>New items listed daily. First Found, First Served.</p>
   <div class="hero-badges">
     <span class="badge">📦 New in Box</span>
     <span class="badge">🔄 Quality Returns</span>
@@ -349,6 +349,7 @@
     <div class="hero-stat"><div class="hero-stat-num">$50</div><div class="hero-stat-label">Max Price</div></div>
     <div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-label">Real Deals</div></div>
     <div class="hero-stat"><div class="hero-stat-num">20%-90% off retail</div><div class="hero-stat-label">Discounts from</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">$50 & Up</div><div class="hero-stat-label">Premium Name Brand Items</div></div>
   </div>
   <div class="contact-strip">
     <span>Browse · Reserve · Ask — All Right Here</span>
@@ -362,9 +363,10 @@
     <div class="rule"><div class="rule-dot"></div>First Found, First Served</div>
     <div class="rule"><div class="rule-dot"></div>Reserves Require a 20% Deposit</div>
     <div class="rule"><div class="rule-dot"></div>Deposits Non-Refundable</div>
-    <div class="rule"><div class="rule-dot"></div>ALL SALES FINAL — NO RETURNS or REFUNDS</div>
+    <div class="rule"><div class="rule-dot"></div><b>ALL SALES FINAL — NO RETURNS or REFUNDS</b></div>
     <div class="rule"><div class="rule-dot"></div>Local Pickup, Door Drop-off, Meet Up Within Reasonable Distance or Shipping Available · El Paso, TX</div>
     <div class="rule"><div class="rule-dot"></div>Buyer Responsible For Shipping Costs</div>
+    <div class="rule"><div class="rule-dot"></div>Please see <b>ALL</b> Photos for Condition, What You See is What You Get!</div>
     <div class="rule"><div class="rule-dot"></div>"GARAGE SALE" Flash Sale Posted with Weekend Dates and Times</div>
   </div>
 
@@ -379,6 +381,7 @@
     <button class="filter-btn" onclick="filterPrice(30,this)">$30</button>
     <button class="filter-btn" onclick="filterPrice(35,this)">$35</button>
     <button class="filter-btn" onclick="filterPrice(40,this)">$40</button>
+    <button class="filter-btn" onclick="filterPrice(45,this)">$45</button>
     <button class="filter-btn" onclick="filterPrice(50,this)">$50</button>
     <button class="filter-btn" style="border-color:#c8920a;color:#c8920a;" onclick="scrollToPremium(this)">⭐ Premium</button>
     <button class="filter-btn garage-btn" onclick="scrollToGarage(this)">🏠 Garage</button>
@@ -386,7 +389,7 @@
   </div>
 
   <div class="section-header">
-    <h2 class="section-label">5 and Dime Deals</h2>
+    <h2 class="section-label">5 and Dime Finds</h2>
     <div class="section-line"></div>
     <div class="section-count" id="main-count"></div>
   </div>
@@ -399,7 +402,7 @@
       <div class="section-line" style="background:linear-gradient(90deg,#c8a030,transparent);"></div>
       <div class="section-count" id="premium-count"></div>
     </div>
-    <p class="premium-desc">⭐ &nbsp; Name brands &amp; sealed finds that retail for $50+ — yours for a fraction of the price. &nbsp;|&nbsp; Too good for a dime, still the best deal around. &nbsp; ⭐</p>
+    <p class="premium-desc">⭐ &nbsp; Name brands &amp; Sealed finds that retail for $50 & Up — Yours for a fraction of the price. &nbsp;|&nbsp; Too good for a dime, still the best deal you can Find! &nbsp; ⭐</p>
     <div class="grid" id="premium-grid"></div>
   </div>
 
@@ -409,7 +412,7 @@
       <span class="garage-section-label">Garage Cleanout</span>
       <div class="garage-section-count" id="garage-count"></div>
     </div>
-    <div class="garage-desc">🔧 &nbsp; Found it in the garage — priced to walk out the door. Clothing, tools, bundles &amp; random finds. No frills, just deals. &nbsp; 🔧</div>
+    <div class="garage-desc">🔧 &nbsp; Found it in the Garage — Priced to walk out the door. Clothing, tools, bundles &amp; random finds. No frills, just deals. &nbsp; 🔧</div>
     <div class="grid" id="garage-grid"></div>
   </div>
 
@@ -503,7 +506,7 @@ const INVENTORY = [
   {
     id:1,
     title:'FISHERPRICE DreamWorks Trolls Toy Rainbow Treehouse',
-    desc:'<b>RETAILS for $59.98</b> - Lights and sounds, DreamWorks themed. Still in original box, <b>Condition Notes:</b> <br>Dimensions: 5.31 x 16.5 x 16 inches. <br>Box slightly damaged seen in photos. <br>Product is fully intact. Never fully assembled. Great gift!!',
+    desc:'<b>RETAILS for $59.98</b> - Lights and sounds, DreamWorks themed. Still in original box, <b>Condition Notes:</b>Dimensions: 5.31 x 16.5 x 16 inches.Box slightly damaged seen in photos. <br>Product is fully intact. Never fully assembled. Great gift!!',
     price:25, retailPrice:59.98, condition:'New in Box', status:'available', newArrival:false, wow:'WOW!', 
     photos:[
       'https://i.postimg.cc/g2Xw42Qv/T1.jpg',
@@ -514,11 +517,17 @@ const INVENTORY = [
   },
   {
     id:2,
-    title:'FILA Fulcrum 3, White, Shoe SIZE: 11.5 Mens', wow:'SUPER DEAL',
+    title:'FILA Fulcrum 3, White, Shoe SIZE: 11.5 Mens', wow:'SUPER <br> DEAL',
     desc:'<b>Product details</b> <br>Top highlights: Fabric type100% Synthetic Origin Imported Sole materialEthylene Vinyl Acetate Shaft heightLow-top <br><b>About this item</b> Upper made of leather for stability and lateral support. Midsole provides cushioning and comfort. Outsole made of rubber for traction and durability.',
     price:40, wasPrice:50, retailPrice:63, condition:'New in Box', status:'available', newArrival:true, 
     photos:[
       'https://i.postimg.cc/Dyh4k1TC/F1.jpg',
+      'https://i.postimg.cc/0NGX2p4T/F2.jpg',
+      'https://i.postimg.cc/SRRgrHKh/F3.jpg',
+      'https://i.postimg.cc/SK4V5nKg/F4.jpg',
+      'https://i.postimg.cc/yx2yTd5J/F5.jpg',
+      'https://i.postimg.cc/Z58xrJL6/F6.jpg',
+      'https://i.postimg.cc/4ddvkVRd/F7.jpg',
 
     ], premium:false
   },
@@ -535,10 +544,18 @@ const INVENTORY = [
   },
   {
     id:4,
-    title:'Mixed Electronics Accessories Lot',
-    desc:'Assorted cables, USB-C chargers, phone holders. All tested and working. Great value bundle.',
-    price:10, condition:'Misc', status:'available', photos:[], premium:false
+    title:'C.Paravano Womens Slingback Flats Pointed Toe Pumps| Kitten Heels for Women| Slingback Dress Shoes| Slingback Sandals |F1-Navy Croc',
+    desc:'<b>Style #:</b> F1-Navy Croc | <b>Original Retail: $118.41</b> <br> <b>Condition:</b> New With Tags - Never Worn | Still Wrapped in box w/ Shoe Shape Tissue Wrap',
+    price:50, retailPrice:118.41, condition:'New in Box', status:'available', newArrival:true, wow:'WOW!',  
+    photos:[
+      'https://i.postimg.cc/TPFD5SDX/C1.jpg',
+      'https://i.postimg.cc/BnvLYsTz/C2.jpg',
+      'https://i.postimg.cc/7YhJXwMp/C3.jpg',
+      'https://i.postimg.cc/LXmnPp8t/C4.jpg',
+    ], premium:false
   },
+  
+  
   {
     id:5,
     title:'ljhljlkjlkjlkj',
@@ -569,8 +586,8 @@ const INVENTORY = [
   {
     id:101,
     title:'Brand New Ariat Savannah H2O Waterproof Boots - Never Worn!',
-    desc:"<b>Size: </b>Women's 11B (Medium Width) <br> <b>Color:</b> Tan/Brown Two-Tone  | <br><b>Style: </b>10042452 |<b> Retail: $179.95+ </b> | <b>Condition:</b> New With Tags | <br><b>Features:</b> Waterproof Pro breathable membrane-Full-grain leather lower, <br>ATS technology for all-day comfort YKK side zipper, Non-marking Duratread Rubber Outsole, 7 inch shaft height",
-    price:99, wasPrice:135, retailPrice:175.99, condition:'New in Box', status:'available', newArrival:false, 
+    desc:"<b>Size: </b>Women's 11B (Medium Width) <br> <b>Color:</b> Tan/Brown Two-Tone  | <br><b>Style: </b>10042452 |<b> Retail: $175.95+ </b> | <b>Condition:</b> New With Tags | <br><b>Features:</b> Waterproof Pro breathable membrane-Full-grain leather lower, <br>ATS technology for all-day comfort YKK side zipper, Non-marking Duratread Rubber Outsole, 7 inch shaft height",
+    price:99, wasPrice:135, retailPrice:175.99, condition:'New in Box', status:'available', newArrival:false, wow:'SUPER!', 
     photos:[
       'https://i.postimg.cc/bJRPh9mT/A8.jpg',
       'https://i.postimg.cc/7hd79JHv/A1.jpg',
