@@ -140,7 +140,7 @@
   .lightbox{position:fixed;inset:0;background:#000000ee;z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
   .lightbox.open{opacity:1;pointer-events:all;}
   .lightbox-inner{position:relative;max-width:90vw;max-height:90vh;}
-  .lightbox-img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:6px;display:block;}
+  .lightbox-img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:6px;display:block;cursor:zoom-in;transition:transform 0.25s ease;}
   .lightbox-close{position:fixed;top:20px;right:24px;background:none;border:1px solid #ffffff33;border-radius:50%;width:40px;height:40px;color:#f5c500;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
   .lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);background:#000000aa;border:1px solid #ffffff22;border-radius:50%;width:44px;height:44px;color:#f5c500;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:910;}
   .lightbox-prev{left:16px;}
@@ -890,6 +890,7 @@ function openLightbox(photos, i) {
   }
 }
 function closeLightbox() {
+  lbZoomReset()
   document.getElementById('lightbox').classList.remove('open')
   document.body.style.overflow = ''
   // Restore the item modal if it was open
@@ -900,6 +901,7 @@ function closeLightbox() {
   }
 }
 function lbNav(dir) {
+  lbZoomReset()
   lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length
   updateLightbox()
 }
@@ -1002,12 +1004,52 @@ document.addEventListener('keydown',e=>{
   } else if (e.key==='Escape') closeForm()
 })
 
-let touchX=0
-document.getElementById('lightbox').addEventListener('touchstart',e=>touchX=e.touches[0].clientX)
-document.getElementById('lightbox').addEventListener('touchend',  e=>{
-  const d=touchX-e.changedTouches[0].clientX
-  if(Math.abs(d)>40) lbNav(d>0?1:-1)
+// LIGHTBOX — swipe left/right + tap to zoom
+let touchX=0, touchY=0, touchMoved=false, lbZoomed=false
+
+document.getElementById('lightbox').addEventListener('touchstart', e=>{
+  touchX = e.touches[0].clientX
+  touchY = e.touches[0].clientY
+  touchMoved = false
+}, {passive:true})
+
+document.getElementById('lightbox').addEventListener('touchmove', e=>{
+  const dx = Math.abs(e.touches[0].clientX - touchX)
+  const dy = Math.abs(e.touches[0].clientY - touchY)
+  if (dx > 8 || dy > 8) touchMoved = true
+}, {passive:true})
+
+document.getElementById('lightbox').addEventListener('touchend', e=>{
+  const dx = touchX - e.changedTouches[0].clientX
+  if (touchMoved && Math.abs(dx) > 40 && !lbZoomed) {
+    lbNav(dx > 0 ? 1 : -1)
+  }
 })
+
+document.getElementById('lb-img').addEventListener('click', e=>{
+  const img = e.currentTarget
+  if (!lbZoomed) {
+    // Zoom in centered on tap point
+    const rect = img.getBoundingClientRect()
+    const ox = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1)
+    const oy = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1)
+    img.style.transformOrigin = `${ox}% ${oy}%`
+    img.style.transform = 'scale(2.5)'
+    img.style.cursor = 'zoom-out'
+    img.style.transition = 'transform 0.25s ease'
+    lbZoomed = true
+  } else {
+    lbZoomReset(img)
+  }
+})
+
+function lbZoomReset(img) {
+  img = img || document.getElementById('lb-img')
+  img.style.transform = ''
+  img.style.transformOrigin = ''
+  img.style.cursor = 'zoom-in'
+  lbZoomed = false
+}
 
 function openItemModal(id) {
   const item = INVENTORY.find(i=>i.id===id)
