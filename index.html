@@ -151,6 +151,8 @@
     .lightbox-next{right:8px;}
   }
   .lightbox-counter{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:#ffffff88;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.1em;}
+  .lightbox-pan-hint{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);background:#000000bb;color:#f5c500;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;padding:6px 14px;border-radius:20px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.4s;z-index:920;}
+  .lightbox-pan-hint.show{opacity:1;}
   .lightbox-dots{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
   .lightbox-dot{width:7px;height:7px;border-radius:50%;background:#ffffff33;border:none;cursor:pointer;transition:all 0.2s;padding:0;}
   .lightbox-dot.active{background:#fff;}
@@ -552,6 +554,7 @@
   <button class="lightbox-nav lightbox-next" onclick="lbNav(1);event.stopPropagation()">&#8250;</button>
   <div class="lightbox-dots" id="lb-dots"></div>
   <div class="lightbox-counter" id="lb-counter"></div>
+  <div class="lightbox-pan-hint" id="lb-pan-hint">👆 Tap &amp; drag to explore the photo</div>
 </div>
 
 <!-- CONTACT FORM MODAL -->
@@ -1046,6 +1049,21 @@ let panX=0, panY=0, panStartX=0, panStartY=0
 const lbImg = document.getElementById('lb-img')
 const ZOOM_SCALE = 2.8
 
+let panHintTimer = null
+function showPanHint() {
+  const hint = document.getElementById('lb-pan-hint')
+  if (!hint) return
+  hint.classList.add('show')
+  clearTimeout(panHintTimer)
+  panHintTimer = setTimeout(()=>hint.classList.remove('show'), 2500)
+}
+function hidePanHint() {
+  const hint = document.getElementById('lb-pan-hint')
+  if (!hint) return
+  clearTimeout(panHintTimer)
+  hint.classList.remove('show')
+}
+
 function applyZoomPan() {
   lbImg.style.transformOrigin = '0% 0%'
   lbImg.style.transform = `scale(${ZOOM_SCALE}) translate(${panX}px, ${panY}px)`
@@ -1106,6 +1124,7 @@ lbImg.addEventListener('touchend', e=>{
       applyZoomPan()
       lbImg.style.cursor = 'grab'
       lbZoomed = true
+      showPanHint()
       setTimeout(()=>lbImg.style.transition='', 300)
     } else {
       lbZoomReset()
@@ -1147,6 +1166,7 @@ lbImg.addEventListener('click', e=>{
     applyZoomPan()
     lbImg.style.cursor = 'grab'
     lbZoomed = true
+    showPanHint()
     setTimeout(()=>lbImg.style.transition='', 300)
   } else {
     lbZoomReset()
@@ -1156,6 +1176,7 @@ lbImg.addEventListener('click', e=>{
 function lbZoomReset(img) {
   img = img || document.getElementById('lb-img')
   panX=0; panY=0
+  hidePanHint()
   img.style.transition = 'transform 0.2s ease'
   img.style.transform = ''
   img.style.transformOrigin = ''
