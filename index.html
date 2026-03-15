@@ -139,7 +139,7 @@
   /* LIGHTBOX — stays dark intentionally */
   .lightbox{position:fixed;inset:0;background:#000000ee;z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
   .lightbox.open{opacity:1;pointer-events:all;}
-  .lightbox-inner{position:relative;max-width:90vw;max-height:90vh;}
+  .lightbox-inner{position:relative;max-width:90vw;max-height:90vh;overflow:hidden;}
   .lightbox-img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:6px;display:block;cursor:zoom-in;transition:transform 0.25s ease;}
   .lightbox-close{position:fixed;top:20px;right:24px;background:none;border:1px solid #ffffff33;border-radius:50%;width:40px;height:40px;color:#f5c500;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
   .lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);background:#000000aa;border:1px solid #ffffff22;border-radius:50%;width:44px;height:44px;color:#f5c500;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:910;}
@@ -1041,56 +1041,113 @@ document.addEventListener('keydown',e=>{
 
 // LIGHTBOX — swipe left/right + tap to zoom
 let touchX=0, touchY=0, touchMoved=false, lbZoomed=false, lastTouch=0
+let panX=0, panY=0, panStartX=0, panStartY=0
 
 const lbImg = document.getElementById('lb-img')
+const ZOOM_SCALE = 2.8
+
+function applyZoomPan() {
+  lbImg.style.transformOrigin = '0% 0%'
+  lbImg.style.transform = `scale(${ZOOM_SCALE}) translate(${panX}px, ${panY}px)`
+}
+
+function clampPan() {
+  // Clamp so user can't pan the image fully off screen
+  const rect = lbImg.getBoundingClientRect()
+  const maxX = 0
+  const minX = -((ZOOM_SCALE - 1) * rect.width  / ZOOM_SCALE)
+  const maxY = 0
+  const minY = -((ZOOM_SCALE - 1) * rect.height / ZOOM_SCALE)
+  panX = Math.min(maxX, Math.max(minX, panX))
+  panY = Math.min(maxY, Math.max(minY, panY))
+}
 
 lbImg.addEventListener('touchstart', e=>{
   touchX = e.touches[0].clientX
   touchY = e.touches[0].clientY
+  panStartX = panX
+  panStartY = panY
   touchMoved = false
 }, {passive:true})
 
 lbImg.addEventListener('touchmove', e=>{
-  const dx = Math.abs(e.touches[0].clientX - touchX)
-  const dy = Math.abs(e.touches[0].clientY - touchY)
-  if (dx > 8 || dy > 8) touchMoved = true
-}, {passive:true})
+  const dx = e.touches[0].clientX - touchX
+  const dy = e.touches[0].clientY - touchY
+  if (Math.abs(dx) > 6 || Math.abs(dy) > 6) touchMoved = true
+  if (lbZoomed && touchMoved) {
+    e.preventDefault()
+    panX = panStartX + dx / ZOOM_SCALE
+    panY = panStartY + dy / ZOOM_SCALE
+    clampPan()
+    applyZoomPan()
+  }
+}, {passive:false})
 
 lbImg.addEventListener('touchend', e=>{
-  lastTouch = Date.now() // mark that a touch just happened
+  lastTouch = Date.now()
   const dx = touchX - e.changedTouches[0].clientX
+  // Swipe to nav — only when not zoomed and swiped far enough
   if (touchMoved && Math.abs(dx) > 40 && !lbZoomed) {
     lbNav(dx > 0 ? 1 : -1)
     return
   }
+  // Tap to zoom in or out
   if (!touchMoved) {
-    e.preventDefault() // block the ghost click that fires after touchend
+    e.preventDefault()
     if (!lbZoomed) {
+      // Center pan on tap point
       const rect = lbImg.getBoundingClientRect()
-      const ox = ((e.changedTouches[0].clientX - rect.left) / rect.width  * 100).toFixed(1)
-      const oy = ((e.changedTouches[0].clientY - rect.top)  / rect.height * 100).toFixed(1)
-      lbImg.style.transformOrigin = `${ox}% ${oy}%`
-      lbImg.style.transform = 'scale(2.5)'
-      lbImg.style.cursor = 'zoom-out'
+      const tapX = e.changedTouches[0].clientX - rect.left
+      const tapY = e.changedTouches[0].clientY - rect.top
+      panX = -(tapX / rect.width  * (ZOOM_SCALE - 1) * rect.width  / ZOOM_SCALE)
+      panY = -(tapY / rect.height * (ZOOM_SCALE - 1) * rect.height / ZOOM_SCALE)
+      clampPan()
+      lbImg.style.transition = 'transform 0.25s ease'
+      applyZoomPan()
+      lbImg.style.cursor = 'grab'
       lbZoomed = true
+      setTimeout(()=>lbImg.style.transition='', 300)
     } else {
       lbZoomReset()
     }
   }
 })
 
-// Desktop mouse click only — skip if a touch just happened
+// Desktop mouse — click to zoom, drag to pan
+let mouseDown=false, mousePanStartX=0, mousePanStartY=0, mouseStartPanX=0, mouseStartPanY=0
+lbImg.addEventListener('mousedown', e=>{
+  if (!lbZoomed) return
+  mouseDown=true
+  mousePanStartX=e.clientX; mousePanStartY=e.clientY
+  mouseStartPanX=panX; mouseStartPanY=panY
+  lbImg.style.cursor='grabbing'
+  e.preventDefault()
+})
+window.addEventListener('mousemove', e=>{
+  if (!mouseDown||!lbZoomed) return
+  panX = mouseStartPanX + (e.clientX - mousePanStartX) / ZOOM_SCALE
+  panY = mouseStartPanY + (e.clientY - mousePanStartY) / ZOOM_SCALE
+  clampPan(); applyZoomPan()
+})
+window.addEventListener('mouseup', ()=>{
+  if (mouseDown) { mouseDown=false; if(lbZoomed) lbImg.style.cursor='grab' }
+})
+
 lbImg.addEventListener('click', e=>{
-  if (Date.now() - lastTouch < 500) return // ghost click from touch, ignore
+  if (Date.now() - lastTouch < 500) return
+  if (mouseDown) return
   if (!lbZoomed) {
     const rect = lbImg.getBoundingClientRect()
-    const ox = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1)
-    const oy = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1)
-    lbImg.style.transformOrigin = `${ox}% ${oy}%`
-    lbImg.style.transform = 'scale(2.5)'
-    lbImg.style.cursor = 'zoom-out'
+    const tapX = e.clientX - rect.left
+    const tapY = e.clientY - rect.top
+    panX = -(tapX / rect.width  * (ZOOM_SCALE - 1) * rect.width  / ZOOM_SCALE)
+    panY = -(tapY / rect.height * (ZOOM_SCALE - 1) * rect.height / ZOOM_SCALE)
+    clampPan()
     lbImg.style.transition = 'transform 0.25s ease'
+    applyZoomPan()
+    lbImg.style.cursor = 'grab'
     lbZoomed = true
+    setTimeout(()=>lbImg.style.transition='', 300)
   } else {
     lbZoomReset()
   }
@@ -1098,10 +1155,13 @@ lbImg.addEventListener('click', e=>{
 
 function lbZoomReset(img) {
   img = img || document.getElementById('lb-img')
+  panX=0; panY=0
+  img.style.transition = 'transform 0.2s ease'
   img.style.transform = ''
   img.style.transformOrigin = ''
   img.style.cursor = 'zoom-in'
   lbZoomed = false
+  setTimeout(()=>img.style.transition='', 250)
 }
 
 function openItemModal(id) {
