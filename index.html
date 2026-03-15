@@ -346,26 +346,56 @@
   .item-overlay.open{opacity:1;pointer-events:all;}
   @media(min-width:600px){.item-overlay{align-items:center;padding:20px;}}
 
-  .item-modal{background:var(--bg2);border-radius:18px 18px 0 0;width:100%;max-width:540px;max-height:92vh;overflow:hidden;transform:translateY(40px);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;display:flex;flex-direction:column;}
+  .item-modal{
+    background:var(--bg2);
+    border-radius:18px 18px 0 0;
+    width:100%;max-width:540px;
+    height:88vh;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    transform:translateY(100%);
+    transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    position:relative;
+  }
   .item-overlay.open .item-modal{transform:translateY(0);}
-  @media(min-width:600px){.item-modal{border-radius:16px;transform:scale(0.96);} .item-overlay.open .item-modal{transform:scale(1);}}
+  @media(min-width:600px){
+    .item-modal{border-radius:16px;height:auto;max-height:88vh;transform:scale(0.95);}
+    .item-overlay.open .item-modal{transform:scale(1);}
+  }
+  .item-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);border-radius:18px 18px 0 0;z-index:1;pointer-events:none;}
 
-  .item-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);border-radius:18px 18px 0 0;z-index:1;}
-  .item-modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:10px auto 4px;flex-shrink:0;}
+  /* HEADER — flex-shrink:0 means it NEVER gives up its height */
+  .item-modal-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 16px;
+    background:var(--bg2);
+    border-bottom:2px solid var(--border2);
+    flex-shrink:0;
+    min-height:56px;
+    z-index:5;
+  }
+  .item-modal-header-title{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;color:var(--text3);text-transform:uppercase;}
+  .item-modal-close{
+    width:48px;height:48px;
+    background:#c0392b;border:2px solid #f5c500;border-radius:50%;
+    color:#f5c500;font-size:24px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;flex-shrink:0;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
 
-  /* Closebar is fixed at top of modal, never scrolls away */
-  .item-modal-closebar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 16px;background:var(--bg2);border-bottom:2px solid var(--border2);flex-shrink:0;min-height:52px;z-index:20;}
-  @media(max-width:600px){.item-modal-closebar{min-height:58px;padding:12px 14px 12px 16px;}}
-  .item-modal-closebar-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--text3);text-transform:uppercase;}
-  .item-modal-close{background:#c0392b;border:2px solid #f5c500;border-radius:50%;width:40px;height:40px;color:#f5c500;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-weight:700;flex-shrink:0;}
-  .item-modal-close:hover{background:#a0201a;}
+  /* SCROLL AREA — flex:1 takes all remaining space, scrolls internally */
+  .item-modal-scroll{
+    flex:1;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    min-height:0;
+  }
 
-  /* Scrollable content area below the fixed closebar */
-  .item-modal-scroll{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;}
-
-  /* Carousel — fixed height, no aspect-ratio to avoid bleed */
+  /* Carousel inside scroll area */
   .item-modal-carousel{height:260px;background:var(--bg3);position:relative;overflow:hidden;flex-shrink:0;}
-  @media(max-width:599px){.item-modal-carousel{height:260px;}}
   .item-modal-carousel .carousel-track{display:flex;height:100%;width:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
   .item-modal-carousel .carousel-slide{min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;}
   .item-modal-carousel .carousel-slide img{width:100%;height:100%;object-fit:contain;background:#1a1a1a;display:block;}
@@ -377,7 +407,7 @@
   .item-modal-carousel .carousel-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;}
   .item-modal-carousel .photo-count{position:absolute;top:10px;right:10px;background:#000000aa;color:#f5c500;font-family:'DM Mono',monospace;font-size:11px;padding:3px 8px;border-radius:10px;z-index:10;}
 
-  .item-modal-body{padding:16px 18px 24px;display:flex;flex-direction:column;gap:10px;}
+  .item-modal-body{padding:16px 18px 40px;display:flex;flex-direction:column;gap:10px;}
   .item-modal-title{font-size:16px;font-weight:700;line-height:1.35;color:var(--text);}
   .item-modal-desc{font-size:13px;color:var(--text2);line-height:1.7;}
   .item-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
@@ -1102,9 +1132,8 @@ function openItemModal(id) {
   const retailRow = item.retailPrice ? `<div class="retail-compare"><span class="retail-was">Retail $${item.retailPrice}</span><span class="retail-yours">Your Price $${item.price}</span><span class="retail-savings">SAVE $${(item.retailPrice - item.price).toFixed(2)} · That's ${Math.round((item.retailPrice - item.price) / item.retailPrice * 100)}% OFF!</span></div>` : `<div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#c0392b;">$${item.price}</div>`
 
   document.getElementById('itemModalInner').innerHTML = `
-    <div class="item-modal-handle"></div>
-    <div class="item-modal-closebar">
-      <span class="item-modal-closebar-title">📋 Item Details</span>
+    <div class="item-modal-header">
+      <span class="item-modal-header-title">📋 Item Details</span>
       <button class="item-modal-close" onclick="closeItemModal()" title="Back to catalog">✕</button>
     </div>
     <div class="item-modal-scroll">
