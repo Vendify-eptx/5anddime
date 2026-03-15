@@ -85,14 +85,19 @@
   .card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 14px 38px #00000018;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-  /* CAROUSEL */
+  /* CARD THUMBNAIL (static preview) */
+  .card-thumb{height:200px;background:var(--bg3);position:relative;overflow:hidden;cursor:pointer;}
+  .card-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
+  .card-thumb:hover img{transform:scale(1.03);}
+  .carousel-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--border2);}
+  @media(max-width:600px){.card-thumb{height:180px;}}
+
+  /* CAROUSEL (modal only) */
   .carousel{aspect-ratio:4/3;background:var(--bg3);position:relative;overflow:hidden;cursor:pointer;}
   .carousel-track{display:flex;width:100%;height:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
   .carousel-slide{min-width:100%;height:100%;flex-shrink:0;}
   .carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
-  .carousel-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--border2);}
-  .carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);background:#000000aa;border:1px solid #ffffff18;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f5c500;font-size:16px;z-index:10;transition:background 0.15s;opacity:0;}
-  .carousel:hover .carousel-arrow{opacity:1;}
+  .carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);background:#000000aa;border:1px solid #ffffff18;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f5c500;font-size:16px;z-index:10;transition:background 0.15s;opacity:1;}
   .carousel-arrow:hover{background:#000000ee;}
   .carousel-arrow.prev{left:8px;}
   .carousel-arrow.next{right:8px;}
@@ -197,7 +202,6 @@
 
   @media(max-width:600px){
     .grid{grid-template-columns:1fr;gap:12px;}
-    .carousel{aspect-ratio:unset;height:220px;}
     .card-actions{grid-template-columns:1fr 1fr;}
     .premium-section{padding:18px 14px;}
     .field-row{grid-template-columns:1fr;}
@@ -336,8 +340,8 @@
   .back-to-top:hover{background:#a0201a;transform:translateY(-3px);}
 
   /* ITEM DETAIL MODAL */
-  .btn-details{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;margin:4px 0 0;}
-  .btn-details:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .btn-details{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;margin:4px 0 0;box-shadow:2px 3px 8px #00000022;text-shadow:0 1px 3px #00000033;}
+  .btn-details:hover{border-color:var(--gold-dim);color:var(--gold);box-shadow:2px 4px 12px #00000033;transform:translateY(-1px);}
 
   .item-overlay{position:fixed;inset:0;background:#000000cc;z-index:850;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;padding:0;}
   .item-overlay.open{opacity:1;pointer-events:all;}
@@ -891,58 +895,25 @@ function updateLightbox() {
   document.querySelector('.lightbox-next').style.display = lbPhotos.length>1?'':'none'
 }
 
-function buildCarousel(item) {
+function buildThumbnail(item) {
   const photos = item.photos || []
   const sold   = item.status === 'sold'
   const pend   = item.status === 'pending'
-  const pj     = JSON.stringify(photos).replace(/"/g, "'")
-  if (!photos.length) {
-    return `<div class="carousel">
-      <div class="carousel-placeholder">📦</div>
-      ${sold?`<div class="sold-overlay"><div class="sold-stamp">SOLD</div></div>`:''}
-      ${pend?`<div class="status-ribbon pending">PENDING</div>`:''}
-      ${sold?`<div class="status-ribbon sold">SOLD</div>`:''}
-      ${item.wasPrice
-        ? `<div class="price-tag-wrap"><div class="price-drop-label">🔻 PRICE DROP</div><div class="price-was">$${item.wasPrice}</div><div class="price-now">$${item.price}</div></div>`
-        : `<div class="price-tag">$${item.price}</div>`}
-    </div>`
-  }
-  const slides = photos.map((url,i) =>
-    `<div class="carousel-slide">
-       <img src="${url}" alt="photo ${i+1}" loading="lazy" onclick="openLightbox(${pj},${i})" style="cursor:zoom-in"/>
-     </div>`).join('')
-  const dots = photos.length > 1
-    ? `<div class="carousel-dots">${photos.map((_,i)=>`<button class="carousel-dot${i===0?' active':''}" onclick="carouselGo(this,${i},event)"></button>`).join('')}</div>`
-    : ''
-  return `<div class="carousel" data-index="0" data-total="${photos.length}">
-    <div class="carousel-track">${slides}</div>
-    ${photos.length>1?`<button class="carousel-arrow prev" onclick="carouselNav(this,-1,event)">&#8249;</button><button class="carousel-arrow next" onclick="carouselNav(this,1,event)">&#8250;</button>`:''}
-    ${dots}
-    ${photos.length>1?`<div class="photo-count">📷 ${photos.length}</div>`:''}
-    ${sold?`<div class="sold-overlay"><div class="sold-stamp">SOLD</div></div>`:''}
-    ${pend?`<div class="status-ribbon pending">PENDING</div>`:''}
-    ${sold?`<div class="status-ribbon sold">SOLD</div>`:''}
+  const firstPhoto = photos.length ? photos[0] : null
+  const countBadge = photos.length > 1 ? `<div class="photo-count">📷 ${photos.length}</div>` : ''
+  const imgHTML = firstPhoto
+    ? `<img src="${firstPhoto}" alt="${item.title}" loading="lazy" />`
+    : `<div class="carousel-placeholder">📦</div>`
+  return `<div class="card-thumb">
+    ${imgHTML}
+    ${countBadge}
+    ${sold ? `<div class="sold-overlay"><div class="sold-stamp">SOLD</div></div>` : ''}
+    ${pend ? `<div class="status-ribbon pending">PENDING</div>` : ''}
+    ${sold ? `<div class="status-ribbon sold">SOLD</div>` : ''}
     ${item.wasPrice
-        ? `<div class="price-tag-wrap"><div class="price-drop-label">🔻 PRICE DROP</div><div class="price-was">$${item.wasPrice}</div><div class="price-now">$${item.price}</div></div>`
-        : `<div class="price-tag">$${item.price}</div>`}
+      ? `<div class="price-tag-wrap"><div class="price-drop-label">🔻 PRICE DROP</div><div class="price-was">$${item.wasPrice}</div><div class="price-now">$${item.price}</div></div>`
+      : `<div class="price-tag">$${item.price}</div>`}
   </div>`
-}
-
-function carouselNav(btn,dir,e) {
-  e.stopPropagation()
-  const car=btn.closest('.carousel'), total=+car.dataset.total
-  let idx=(+car.dataset.index+dir+total)%total
-  car.dataset.index=idx
-  car.querySelector('.carousel-track').style.transform=`translateX(-${idx*100}%)`
-  car.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active',i===idx))
-}
-
-function carouselGo(dot,idx,e) {
-  e.stopPropagation()
-  const car=dot.closest('.carousel')
-  car.dataset.index=idx
-  car.querySelector('.carousel-track').style.transform=`translateX(-${idx*100}%)`
-  car.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active',i===idx))
 }
 
 function buildCard(item) {
@@ -958,12 +929,12 @@ function buildCard(item) {
     : `<button class="btn-ask" onclick="openForm(${item.id},'ask')">✉ Ask</button>`
   const hazard = item.newArrival ? ' hazard' : '';
   return `<div class="card${item.premium?' premium':''}${hazard}">${hazard ? '<div class="hazard-label">⚡ NEW ARRIVAL ⚡</div>' : ''}${item.wow ? `<div class="starburst${item.wow==='WOW!'||item.wow==='SUPER DEAL!'?' gold':''}"><span>${item.wow}</span></div>` : ''}
-    ${buildCarousel(item)}
+    ${buildThumbnail(item)}
     <div class="card-body">
       <div class="card-title">${item.title}</div>
     ${item.retailPrice ? `<div class="retail-compare"><span class="retail-was">Retail $${item.retailPrice}</span><span class="retail-yours">Your Price $${item.price}</span><span class="retail-savings">SAVE $${(item.retailPrice - item.price).toFixed(2)} · That's ${Math.round((item.retailPrice - item.price) / item.retailPrice * 100)}% OFF!</span></div>` : ''}
       <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
-      <button class="btn-details" onclick="openItemModal(${item.id})">📋 <span>VIEW DETAILS</span></button>
+      <button class="btn-details" onclick="openItemModal(${item.id})">🔍 <span>VIEW DETAILS & PHOTOS</span></button>
     </div>
     <div class="card-actions">${reserveBtn}${askBtn}</div>
   </div></div>`
