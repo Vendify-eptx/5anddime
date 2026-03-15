@@ -85,23 +85,17 @@
   .card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 14px 38px #00000018;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-  /* CARD THUMBNAIL (static preview) */
-  .card-thumb{height:200px;background:var(--bg3);position:relative;overflow:hidden;cursor:pointer;}
+  /* CARD THUMBNAIL — static single photo preview */
+  .card-thumb{height:190px;background:var(--bg3);position:relative;overflow:hidden;}
+  @media(max-width:600px){.card-thumb{height:200px;}}
   .card-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
-  .card-thumb:hover img{transform:scale(1.03);}
+  .card-thumb:hover img{transform:scale(1.04);}
   .carousel-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--border2);}
-  @media(max-width:600px){.card-thumb{height:180px;}}
 
-  /* CAROUSEL (modal only) */
-  .carousel{aspect-ratio:4/3;background:var(--bg3);position:relative;overflow:hidden;cursor:pointer;}
-  .carousel-track{display:flex;width:100%;height:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
-  .carousel-slide{min-width:100%;height:100%;flex-shrink:0;}
-  .carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
-  .carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);background:#000000aa;border:1px solid #ffffff18;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f5c500;font-size:16px;z-index:10;transition:background 0.15s;opacity:1;}
-  .carousel-arrow:hover{background:#000000ee;}
-  .carousel-arrow.prev{left:8px;}
-  .carousel-arrow.next{right:8px;}
-  .carousel-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:10;}
+  /* CAROUSEL — modal only, do not use on cards */
+  .carousel-track{display:flex;height:100%;width:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
+  .carousel-slide{min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;}
+  .carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;}
   .carousel-dot{width:6px;height:6px;border-radius:50%;background:#ffffff99;border:none;cursor:pointer;transition:all 0.2s;padding:0;}
   .carousel-dot.active{background:#fff;transform:scale(1.2);}
   .photo-count{position:absolute;top:8px;right:8px;background:#000000aa;color:#f5c500;font-family:'DM Mono',monospace;font-size:10px;padding:3px 7px;border-radius:10px;z-index:10;}
@@ -340,8 +334,8 @@
   .back-to-top:hover{background:#a0201a;transform:translateY(-3px);}
 
   /* ITEM DETAIL MODAL */
-  .btn-details{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;margin:4px 0 0;box-shadow:2px 3px 8px #00000022;text-shadow:0 1px 3px #00000033;}
-  .btn-details:hover{border-color:var(--gold-dim);color:var(--gold);box-shadow:2px 4px 12px #00000033;transform:translateY(-1px);}
+  .btn-details{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;margin:4px 0 0;}
+  .btn-details:hover{border-color:var(--gold-dim);color:var(--gold);}
 
   .item-overlay{position:fixed;inset:0;background:#000000cc;z-index:850;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;padding:0;}
   .item-overlay.open{opacity:1;pointer-events:all;}
@@ -360,13 +354,18 @@
   .item-modal-close{background:#c0392b;border:2px solid #f5c500;border-radius:50%;width:36px;height:36px;color:#f5c500;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-weight:700;flex-shrink:0;}
   .item-modal-close:hover{background:#a0201a;}
 
-  /* Carousel — shorter on mobile so content is reachable */
-  .item-modal-carousel{aspect-ratio:4/3;background:var(--bg3);position:relative;overflow:hidden;flex-shrink:0;}
-  @media(max-width:599px){.item-modal-carousel{aspect-ratio:unset;height:220px;}}
-  .item-modal-carousel .carousel-track{display:flex;width:100%;height:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
-  .item-modal-carousel .carousel-slide{min-width:100%;height:100%;flex-shrink:0;}
+  /* Carousel — fixed height, no aspect-ratio to avoid bleed */
+  .item-modal-carousel{height:260px;background:var(--bg3);position:relative;overflow:hidden;flex-shrink:0;}
+  @media(max-width:599px){.item-modal-carousel{height:200px;}}
+  .item-modal-carousel .carousel-track{display:flex;height:100%;width:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
+  .item-modal-carousel .carousel-slide{min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;}
   .item-modal-carousel .carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;}
-  .item-modal-carousel .carousel-arrow{opacity:1;}
+  .item-modal-carousel .carousel-arrow{opacity:1;position:absolute;top:50%;transform:translateY(-50%);background:#000000aa;border:1px solid #ffffff18;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f5c500;font-size:18px;z-index:10;}
+  .item-modal-carousel .carousel-arrow:hover{background:#000000ee;}
+  .item-modal-carousel .carousel-arrow.prev{left:10px;}
+  .item-modal-carousel .carousel-arrow.next{right:10px;}
+  .item-modal-carousel .carousel-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;}
+  .item-modal-carousel .photo-count{position:absolute;top:10px;right:10px;background:#000000aa;color:#f5c500;font-family:'DM Mono',monospace;font-size:11px;padding:3px 8px;border-radius:10px;z-index:10;}
 
   .item-modal-body{padding:16px 18px 24px;display:flex;flex-direction:column;gap:10px;}
   .item-modal-title{font-size:16px;font-weight:700;line-height:1.35;color:var(--text);}
