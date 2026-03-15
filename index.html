@@ -878,14 +878,20 @@ function openLightbox(photos, i) {
   document.body.style.overflow = 'hidden'
   // Hide the item modal so lightbox has full stage
   const overlay = document.getElementById('itemOverlay')
-  if (overlay.classList.contains('open')) overlay.style.opacity = '0'
+  if (overlay.classList.contains('open')) {
+    overlay.style.opacity = '0'
+    overlay.style.pointerEvents = 'none'
+  }
 }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open')
   document.body.style.overflow = ''
   // Restore the item modal if it was open
   const overlay = document.getElementById('itemOverlay')
-  if (overlay.classList.contains('open')) overlay.style.opacity = '1'
+  if (overlay.classList.contains('open')) {
+    overlay.style.opacity = '1'
+    overlay.style.pointerEvents = 'all'
+  }
 }
 function lbNav(dir) {
   lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length
@@ -1046,8 +1052,11 @@ function openItemModal(id) {
 }
 
 function closeItemModal() {
-  document.getElementById('itemOverlay').classList.remove('open')
-  document.body.style.overflow=''
+  const overlay = document.getElementById('itemOverlay')
+  overlay.classList.remove('open')
+  overlay.style.opacity = ''
+  overlay.style.pointerEvents = ''
+  document.body.style.overflow = ''
 }
 
 function modalCarouselNav(btn,dir,e) {
