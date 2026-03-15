@@ -153,6 +153,8 @@
   .lightbox-counter{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:#ffffff88;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.1em;}
   .lightbox-pan-hint{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);background:#000000bb;color:#f5c500;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;padding:6px 14px;border-radius:20px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.4s;z-index:920;}
   .lightbox-pan-hint.show{opacity:1;}
+  .lightbox-zoom-hint{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);background:#000000bb;color:#f5c500;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;padding:6px 14px;border-radius:20px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.4s;z-index:920;}
+  .lightbox-zoom-hint.show{opacity:1;}
   .lightbox-dots{position:fixed;bottom:44px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
   .lightbox-dot{width:7px;height:7px;border-radius:50%;background:#ffffff33;border:none;cursor:pointer;transition:all 0.2s;padding:0;}
   .lightbox-dot.active{background:#fff;}
@@ -555,6 +557,7 @@
   <div class="lightbox-dots" id="lb-dots"></div>
   <div class="lightbox-counter" id="lb-counter"></div>
   <div class="lightbox-pan-hint" id="lb-pan-hint">👆 Tap &amp; drag to explore the photo</div>
+  <div class="lightbox-zoom-hint" id="lb-zoom-hint">🔍 Tap photo to zoom in for a closer look</div>
 </div>
 
 <!-- CONTACT FORM MODAL -->
@@ -920,6 +923,7 @@ function openLightbox(photos, i) {
   updateLightbox()
   document.getElementById('lightbox').classList.add('open')
   document.body.style.overflow = 'hidden'
+  showZoomHint()
   // Hide the item modal so lightbox has full stage
   const overlay = document.getElementById('itemOverlay')
   if (overlay.classList.contains('open')) {
@@ -929,6 +933,8 @@ function openLightbox(photos, i) {
 }
 function closeLightbox() {
   lbZoomReset()
+  hideZoomHint()
+  hidePanHint()
   document.getElementById('lightbox').classList.remove('open')
   document.body.style.overflow = ''
   // Restore the item modal if it was open
@@ -942,6 +948,7 @@ function lbNav(dir) {
   lbZoomReset()
   lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length
   updateLightbox()
+  showZoomHint()
 }
 function updateLightbox() {
   document.getElementById('lb-img').src = lbPhotos[lbIndex]
@@ -1064,6 +1071,21 @@ function hidePanHint() {
   hint.classList.remove('show')
 }
 
+let zoomHintTimer = null
+function showZoomHint() {
+  const hint = document.getElementById('lb-zoom-hint')
+  if (!hint) return
+  hint.classList.add('show')
+  clearTimeout(zoomHintTimer)
+  zoomHintTimer = setTimeout(()=>hint.classList.remove('show'), 2500)
+}
+function hideZoomHint() {
+  const hint = document.getElementById('lb-zoom-hint')
+  if (!hint) return
+  clearTimeout(zoomHintTimer)
+  hint.classList.remove('show')
+}
+
 function applyZoomPan() {
   lbImg.style.transformOrigin = '0% 0%'
   lbImg.style.transform = `scale(${ZOOM_SCALE}) translate(${panX}px, ${panY}px)`
@@ -1124,6 +1146,7 @@ lbImg.addEventListener('touchend', e=>{
       applyZoomPan()
       lbImg.style.cursor = 'grab'
       lbZoomed = true
+      hideZoomHint()
       showPanHint()
       setTimeout(()=>lbImg.style.transition='', 300)
     } else {
@@ -1166,6 +1189,7 @@ lbImg.addEventListener('click', e=>{
     applyZoomPan()
     lbImg.style.cursor = 'grab'
     lbZoomed = true
+    hideZoomHint()
     showPanHint()
     setTimeout(()=>lbImg.style.transition='', 300)
   } else {
