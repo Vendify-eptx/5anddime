@@ -137,7 +137,7 @@
   .empty{grid-column:1/-1;text-align:center;padding:44px 24px;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.08em;border:2px dashed var(--border);border-radius:10px;}
 
   /* LIGHTBOX — stays dark intentionally */
-  .lightbox{position:fixed;inset:0;background:#000000ee;z-index:800;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+  .lightbox{position:fixed;inset:0;background:#000000ee;z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
   .lightbox.open{opacity:1;pointer-events:all;}
   .lightbox-inner{position:relative;max-width:90vw;max-height:90vh;}
   .lightbox-img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:6px;display:block;}
@@ -360,6 +360,7 @@
   .item-modal-carousel .carousel-track{display:flex;height:100%;width:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
   .item-modal-carousel .carousel-slide{min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;}
   .item-modal-carousel .carousel-slide img{width:100%;height:100%;object-fit:contain;background:#1a1a1a;display:block;}
+  .img-zoom-hint{position:absolute;bottom:32px;right:10px;background:#000000bb;color:#f5c500;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;padding:3px 8px;border-radius:10px;z-index:10;pointer-events:none;}
   .item-modal-carousel .carousel-arrow{opacity:1;position:absolute;top:50%;transform:translateY(-50%);background:#000000aa;border:1px solid #ffffff18;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f5c500;font-size:18px;z-index:10;}
   .item-modal-carousel .carousel-arrow:hover{background:#000000ee;}
   .item-modal-carousel .carousel-arrow.prev{left:10px;}
@@ -875,10 +876,16 @@ function openLightbox(photos, i) {
   updateLightbox()
   document.getElementById('lightbox').classList.add('open')
   document.body.style.overflow = 'hidden'
+  // Hide the item modal so lightbox has full stage
+  const overlay = document.getElementById('itemOverlay')
+  if (overlay.classList.contains('open')) overlay.style.opacity = '0'
 }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open')
   document.body.style.overflow = ''
+  // Restore the item modal if it was open
+  const overlay = document.getElementById('itemOverlay')
+  if (overlay.classList.contains('open')) overlay.style.opacity = '1'
 }
 function lbNav(dir) {
   lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length
@@ -1005,7 +1012,8 @@ function openItemModal(id) {
     : `<button class="btn-ask" onclick="closeItemModal();openForm(${item.id},'ask')">✉ Ask</button>`
 
   // Build carousel for modal
-  const slides = (item.photos||[]).map(p=>`<div class="carousel-slide"><img src="${p}" alt="${item.title}" loading="lazy"/></div>`).join('')
+  const pj = JSON.stringify(item.photos||[]).replace(/"/g,"'")
+  const slides = (item.photos||[]).map((p,i)=>`<div class="carousel-slide"><img src="${p}" alt="${item.title}" loading="lazy" onclick="openLightbox(${pj},${i})" style="cursor:zoom-in;" title="Tap to enlarge"/></div>`).join('')
   const dots = (item.photos||[]).map((_,i)=>`<button class="carousel-dot${i===0?' active':''}" onclick="modalCarouselGo(this,${i},event)"></button>`).join('')
   const carouselHTML = item.photos && item.photos.length > 0 ? `
     <div class="item-modal-carousel" data-index="0" data-total="${item.photos.length}">
@@ -1013,6 +1021,7 @@ function openItemModal(id) {
       ${item.photos.length>1?`<button class="carousel-arrow prev" onclick="modalCarouselNav(this,-1,event)">&#8249;</button><button class="carousel-arrow next" onclick="modalCarouselNav(this,1,event)">&#8250;</button>`:''}
       <div class="carousel-dots">${dots}</div>
       <div class="photo-count">📷 ${item.photos.length}</div>
+      <div class="img-zoom-hint">🔍 tap to enlarge</div>
     </div>` : ''
 
   const retailRow = item.retailPrice ? `<div class="retail-compare"><span class="retail-was">Retail $${item.retailPrice}</span><span class="retail-yours">Your Price $${item.price}</span><span class="retail-savings">SAVE $${(item.retailPrice - item.price).toFixed(2)} · That's ${Math.round((item.retailPrice - item.price) / item.retailPrice * 100)}% OFF!</span></div>` : `<div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#c0392b;">$${item.price}</div>`
