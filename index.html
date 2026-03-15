@@ -346,19 +346,22 @@
   .item-overlay.open{opacity:1;pointer-events:all;}
   @media(min-width:600px){.item-overlay{align-items:center;padding:20px;}}
 
-  .item-modal{background:var(--bg2);border-radius:18px 18px 0 0;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;transform:translateY(40px);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;display:flex;flex-direction:column;}
+  .item-modal{background:var(--bg2);border-radius:18px 18px 0 0;width:100%;max-width:540px;max-height:92vh;overflow:hidden;transform:translateY(40px);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;display:flex;flex-direction:column;}
   .item-overlay.open .item-modal{transform:translateY(0);}
   @media(min-width:600px){.item-modal{border-radius:16px;transform:scale(0.96);} .item-overlay.open .item-modal{transform:scale(1);}}
 
   .item-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold-dim),var(--gold),var(--gold-dim),transparent);border-radius:18px 18px 0 0;z-index:1;}
   .item-modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:10px auto 4px;flex-shrink:0;}
 
-  /* Sticky close bar — always visible at top of modal */
-  .item-modal-closebar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 16px;background:var(--bg2);border-bottom:2px solid var(--border2);flex-shrink:0;min-height:52px;}
+  /* Closebar is fixed at top of modal, never scrolls away */
+  .item-modal-closebar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 16px;background:var(--bg2);border-bottom:2px solid var(--border2);flex-shrink:0;min-height:52px;z-index:20;}
   @media(max-width:600px){.item-modal-closebar{min-height:58px;padding:12px 14px 12px 16px;}}
   .item-modal-closebar-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--text3);text-transform:uppercase;}
-  .item-modal-close{background:#c0392b;border:2px solid #f5c500;border-radius:50%;width:36px;height:36px;color:#f5c500;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-weight:700;flex-shrink:0;}
+  .item-modal-close{background:#c0392b;border:2px solid #f5c500;border-radius:50%;width:40px;height:40px;color:#f5c500;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-weight:700;flex-shrink:0;}
   .item-modal-close:hover{background:#a0201a;}
+
+  /* Scrollable content area below the fixed closebar */
+  .item-modal-scroll{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;}
 
   /* Carousel — fixed height, no aspect-ratio to avoid bleed */
   .item-modal-carousel{height:260px;background:var(--bg3);position:relative;overflow:hidden;flex-shrink:0;}
@@ -1104,13 +1107,15 @@ function openItemModal(id) {
       <span class="item-modal-closebar-title">📋 Item Details</span>
       <button class="item-modal-close" onclick="closeItemModal()" title="Back to catalog">✕</button>
     </div>
-    ${carouselHTML}
-    <div class="item-modal-body">
-      <div class="item-modal-title">${item.title}</div>
-      ${retailRow}
-      <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
-      <div class="item-modal-desc">${item.desc}</div>
-      <div class="item-modal-actions">${reserveBtn}${askBtn}</div>
+    <div class="item-modal-scroll">
+      ${carouselHTML}
+      <div class="item-modal-body">
+        <div class="item-modal-title">${item.title}</div>
+        ${retailRow}
+        <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
+        <div class="item-modal-desc">${item.desc}</div>
+        <div class="item-modal-actions">${reserveBtn}${askBtn}</div>
+      </div>
     </div>`
 
   document.getElementById('itemOverlay').classList.add('open')
@@ -1163,21 +1168,20 @@ function bodyUnlock() {
 
 // Prevent overlay touchmove from reaching browser chrome (stops snap-back)
 document.getElementById('itemOverlay').addEventListener('touchmove', function(e) {
-  const modal = this.querySelector('.item-modal')
+  const modal = this.querySelector('.item-modal-scroll')
   if (modal) {
     const atTop = modal.scrollTop === 0
     const atBottom = modal.scrollTop + modal.clientHeight >= modal.scrollHeight
     const scrollingUp = e.touches[0].clientY > touchY
     const scrollingDown = e.touches[0].clientY < touchY
-    // Allow scroll if modal has overflow and is not at boundary
     if (modal.scrollHeight > modal.clientHeight) {
       if ((atTop && scrollingUp) || (atBottom && scrollingDown)) {
-        e.preventDefault() // at boundary, block
+        e.preventDefault()
       }
-      return // otherwise let it scroll
+      return
     }
   }
-  e.preventDefault() // no overflow, block all
+  e.preventDefault()
 }, { passive: false })
 
 render()
