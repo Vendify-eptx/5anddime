@@ -392,10 +392,12 @@
     -webkit-overflow-scrolling:touch;
     overscroll-behavior:contain;
     min-height:0;
+    touch-action:pan-y;
   }
 
   /* Carousel inside scroll area */
-  .item-modal-carousel{height:260px;background:var(--bg3);position:relative;overflow:hidden;flex-shrink:0;}
+  .item-modal-carousel{height:240px;background:var(--bg3);position:relative;overflow:hidden;flex-shrink:0;}
+  @media(max-width:600px){.item-modal-carousel{height:200px;}}
   .item-modal-carousel .carousel-track{display:flex;height:100%;width:100%;transition:transform 0.35s cubic-bezier(.4,0,.2,1);}
   .item-modal-carousel .carousel-slide{min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;}
   .item-modal-carousel .carousel-slide img{width:100%;height:100%;object-fit:contain;background:#1a1a1a;display:block;}
@@ -1195,21 +1197,10 @@ function bodyUnlock() {
   window.scrollTo(0, _lockScrollY)
 }
 
-// Prevent overlay touchmove from reaching browser chrome (stops snap-back)
+// Only block touchmove on the overlay background itself, not inside the scroll area
 document.getElementById('itemOverlay').addEventListener('touchmove', function(e) {
-  const modal = this.querySelector('.item-modal-scroll')
-  if (modal) {
-    const atTop = modal.scrollTop === 0
-    const atBottom = modal.scrollTop + modal.clientHeight >= modal.scrollHeight
-    const scrollingUp = e.touches[0].clientY > touchY
-    const scrollingDown = e.touches[0].clientY < touchY
-    if (modal.scrollHeight > modal.clientHeight) {
-      if ((atTop && scrollingUp) || (atBottom && scrollingDown)) {
-        e.preventDefault()
-      }
-      return
-    }
-  }
+  const scrollArea = this.querySelector('.item-modal-scroll')
+  if (scrollArea && scrollArea.contains(e.target)) return // let scroll area handle it
   e.preventDefault()
 }, { passive: false })
 
