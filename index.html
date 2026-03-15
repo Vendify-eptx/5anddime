@@ -81,8 +81,8 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:15px;margin-bottom:56px;}
 
   /* CARD */
-  .card{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;animation:fadeUp 0.35s ease both;}
-  .card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 14px 38px #00000018;}
+  .card{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;animation:fadeUp 0.35s ease both;box-shadow:4px 4px 0 #00000055,6px 6px 0 #00000025;}
+  .card:hover{transform:translateY(-4px) translateX(-2px);border-color:var(--border2);box-shadow:6px 8px 0 #00000060,8px 10px 0 #00000025;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
   /* CARD THUMBNAIL — static single photo preview */
@@ -116,13 +116,15 @@
   .cond-misc{background:#d0c0a8;color:#3a2818;border:1px solid #907858;}
   .card-desc{font-size:12px;color:var(--text2);line-height:1.6;flex:0;}
 
-  .card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:11px 14px 13px;border-top:1px solid var(--border);}
-  .btn-reserve{background:var(--gold);color:#f5c500;border:none;border-radius:5px;padding:9px 10px;font-family:'Barlow',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .card-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:11px 14px 13px;border-top:1px solid var(--border);}
+  .btn-reserve{background:var(--gold);color:#f5c500;border:none;border-radius:5px;padding:9px 6px;font-family:'Barlow',sans-serif;font-weight:700;font-size:11px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:4px;}
   .btn-reserve:hover{background:var(--gold2);transform:translateY(-1px);}
   .btn-reserve.sold{background:#fde8e6;color:#c0392b;cursor:not-allowed;transform:none;}
   .btn-reserve.pending-btn{background:#fef9c3;color:#b45309;cursor:not-allowed;transform:none;border:1px solid #fde68a;}
-  .btn-ask{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:9px 10px;font-family:'Barlow',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .btn-ask{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:9px 6px;font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:4px;}
   .btn-ask:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .btn-offer{background:transparent;color:var(--green);border:1px solid var(--green);border-radius:5px;padding:9px 6px;font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:4px;}
+  .btn-offer:hover{background:var(--green);color:#fff;transform:translateY(-1px);}
 
   /* PREMIUM */
   .premium-section{background:#b0a080;border:1px solid var(--premium-border);border-radius:10px;padding:18px 20px;margin-bottom:56px;position:relative;overflow:hidden;}
@@ -205,7 +207,7 @@
 
   @media(max-width:600px){
     .grid{grid-template-columns:1fr;gap:12px;}
-    .card-actions{grid-template-columns:1fr 1fr;}
+    .card-actions{grid-template-columns:1fr 1fr 1fr;gap:5px;}
     .premium-section{padding:18px 14px;}
     .field-row{grid-template-columns:1fr;}
     .form-modal{border-radius:12px;}
@@ -420,7 +422,21 @@
   .item-modal-actions .btn-reserve{padding:12px;font-size:14px;}
   .item-modal-actions .btn-ask{padding:12px;font-size:14px;}
 
-  /* Scale down price tag + starburst on small cards (mobile grid) */
+  /* EMAIL SIGNUP STRIP */
+  .signup-strip{background:linear-gradient(135deg,#2a1505,#3a2010,#2a1505);border-top:3px solid var(--gold);border-bottom:3px solid var(--gold);padding:32px 24px;}
+  .signup-inner{max-width:700px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;}
+  .signup-title{font-family:'Bebas Neue',sans-serif;font-size:32px;color:#f5c500;letter-spacing:0.08em;text-shadow:2px 2px 0 #3a1a00;}
+  .signup-sub{font-size:13px;color:#c8a880;font-family:'Barlow',sans-serif;line-height:1.5;}
+  .signup-form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;}
+  .signup-input{background:#ffffff15;border:1px solid #ffffff30;border-radius:6px;color:#fff;font-family:'Barlow',sans-serif;font-size:14px;padding:10px 14px;outline:none;transition:border-color 0.15s;min-width:180px;flex:1;max-width:220px;}
+  .signup-input::placeholder{color:#c8a88088;}
+  .signup-input:focus{border-color:var(--gold);}
+  .signup-btn{background:var(--gold);color:#f5c500;border:none;border-radius:6px;padding:10px 20px;font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+  .signup-btn:hover{background:var(--gold2);transform:translateY(-1px);}
+  .signup-msg{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.05em;min-height:20px;}
+  .signup-msg.success{color:#4ade80;}
+  .signup-msg.error{color:#f87171;}
+  @media(max-width:600px){.signup-form{flex-direction:column;align-items:stretch;} .signup-input{max-width:100%;} .signup-btn{width:100%;}}
   @media(max-width:600px){
     .price-tag{font-size:22px;padding:3px 9px;}
     .price-now{font-size:22px;padding:2px 9px;}
@@ -538,6 +554,22 @@
 </div>
 
 </main>
+<!-- EMAIL SIGNUP -->
+<div class="signup-strip">
+  <div class="signup-inner">
+    <div class="signup-text">
+      <div class="signup-title">📬 Stay in the Loop</div>
+      <div class="signup-sub">Be first to know when new deals drop. No spam — just fresh finds.</div>
+    </div>
+    <form class="signup-form" onsubmit="submitSignup(event)">
+      <input class="signup-input" type="text" id="signupName" placeholder="Your first name" />
+      <input class="signup-input" type="email" id="signupEmail" placeholder="Your email address" required />
+      <button class="signup-btn" type="submit" id="signupBtn">🔔 Notify Me</button>
+    </form>
+    <div class="signup-msg" id="signupMsg"></div>
+  </div>
+</div>
+
 <footer>
 
   <p>© 2025 5 and Dime Online Deals &nbsp;·&nbsp; El Paso, TX &nbsp;·&nbsp; All sales final</p>
@@ -578,9 +610,10 @@
         <button class="form-close-btn" onclick="closeForm()">✕</button>
       </div>
       <div class="form-body">
-        <div class="type-toggle">
-          <button class="type-btn active" id="typeReserve" onclick="setType('reserve')">🏷 Reserve This Item</button>
-          <button class="type-btn" id="typeAsk" onclick="setType('ask')">✉ Ask a Question</button>
+        <div class="type-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+          <button class="type-btn active" id="typeReserve" onclick="setType('reserve')">🏷 Reserve</button>
+          <button class="type-btn" id="typeAsk" onclick="setType('ask')">✉ Ask</button>
+          <button class="type-btn" id="typeOffer" onclick="setType('offer')">💲 Offer</button>
         </div>
         <div class="reserve-note show" id="reserveNote">
           💡 Sending this form starts the reservation process. I'll reply with Deposit Details — Once your Deposit is Received the Item is Reserved and Exchanged with Balance Payoff. <strong>Deposits are Non-Refundable as it is a Commit to Buy Contract.</strong> <strong>Please do not reserve if you do not intend to buy</strong>
@@ -634,7 +667,7 @@ const INVENTORY = [
       'https://i.postimg.cc/qRLgghhx/T2.jpg',
       'https://i.postimg.cc/ZKgn9hnm/T3.jpg',
       'https://i.postimg.cc/6qPWGd9h/T4.jpg',
-    ], premium:false
+    ], premium:false, offer:false
   },
   {
     id:2,
@@ -657,7 +690,7 @@ const INVENTORY = [
       'https://i.postimg.cc/Z58xrJL6/F6.jpg',
       'https://i.postimg.cc/4ddvkVRd/F7.jpg',
 
-    ], premium:false
+    ], premium:false, offer:false
   },
   {
     id:3,
@@ -677,7 +710,7 @@ const INVENTORY = [
       'https://i.postimg.cc/nVmP8sdM/D1.jpg',
       'https://i.postimg.cc/k42XMNVP/D2.jpg',
       'https://i.postimg.cc/K8QZnpBZ/D3.jpg',
-    ], premium:true
+    ], premium:true, offer:true
   },
   {
     id:4,
@@ -698,7 +731,7 @@ const INVENTORY = [
       'https://i.postimg.cc/7YhJXwMp/C3.jpg',
       'https://i.postimg.cc/LXmnPp8t/C4.jpg',
     
-    ], premium:false
+    ], premium:false, offer:true
   },
   {
     id:5,
@@ -721,13 +754,13 @@ const INVENTORY = [
       '',
       '',
       '',
-    ], premium:true
+    ], premium:true, offer:true
   },
   {
     id:6,
     title:'Gel Blaster M4-Style Automatic',
     desc:'Metal gearbox, full auto, shoots water gel beads. Includes magazine. Buyer responsible for compliance.',
-    price:30, condition:'Quality Return', status:'available', photos:[], premium:false
+    price:30, condition:'Quality Return', status:'available', photos:[], premium:false, offer:false
   },
   {
     id:7,
@@ -752,7 +785,7 @@ const INVENTORY = [
       'https://i.postimg.cc/rm6sgDPh/E4.jpg',
       'https://i.postimg.cc/3JrRL5th/E5.jpg',
     ], 
-    premium:false
+    premium:false, offer:false
   },
   {
     id:101,
@@ -778,7 +811,7 @@ const INVENTORY = [
       'https://i.postimg.cc/kMWvv9LV/A6.jpg',
       'https://i.postimg.cc/wxN04DR6/A5.jpg',
     ], 
-    premium:true
+    premium:true, offer:true
   },
   {
     id:102,
@@ -789,19 +822,19 @@ const INVENTORY = [
     <li>Original packaging</li>
     <li>Never used</li>
   </ul>`,
-    price:10, condition:'Quality Return', status:'available', photos:[], premium:true
+    price:10, condition:'Quality Return', status:'available', photos:[], premium:true, offer:false
   },
   {
     id:17,
     title:'Garage Bundle — Tools & Misc',
     desc:'Random lot of hand tools, odds and ends from the garage. All functional. Priced to go fast — make room, make deals!',
-    price:10, condition:'Garage Find', status:'available', newArrival:false, garage:true, photos:[], premium:false
+    price:10, condition:'Garage Find', status:'available', newArrival:false, garage:true, photos:[], premium:false, offer:false
   },
   {
     id:103,
     title:'',
     desc:'',
-    price:5, condition:'Quality Return', status:'available', photos:[], premium:true
+    price:5, condition:'Quality Return', status:'available', photos:[], premium:true, offer:false
   },
 ]
 
@@ -841,15 +874,20 @@ function openForm(itemId, type) {
 function setType(type) {
   activeType = type
   const isReserve = type === 'reserve'
+  const isOffer   = type === 'offer'
+  const isAsk     = type === 'ask'
   document.getElementById('typeReserve').classList.toggle('active', isReserve)
-  document.getElementById('typeAsk').classList.toggle('active', !isReserve)
+  document.getElementById('typeAsk').classList.toggle('active', isAsk)
+  document.getElementById('typeOffer').classList.toggle('active', isOffer)
   document.getElementById('reserveNote').classList.toggle('show', isReserve)
-  document.getElementById('formTitle').textContent = isReserve ? 'Reserve Item' : 'Ask a Question'
-  document.getElementById('msgLabel').textContent  = isReserve ? 'Anything else I should know?' : 'Your Question *'
+  document.getElementById('formTitle').textContent = isReserve ? 'Reserve Item' : isOffer ? 'Make an Offer' : 'Ask a Question'
+  document.getElementById('msgLabel').textContent  = isReserve ? 'Anything else I should know?' : isOffer ? 'Your Offer Amount & Details *' : 'Your Question *'
   document.getElementById('fieldMessage').placeholder = isReserve
     ? 'Any questions about condition, pickup time, etc. (optional)'
+    : isOffer
+    ? 'e.g. I\'d like to offer $20 — can do cash pickup in El Paso.'
     : 'Type your question here...'
-  document.getElementById('submitText').textContent = isReserve ? '🏷 Send Reservation Request' : '✉ Send Question'
+  document.getElementById('submitText').textContent = isReserve ? '🏷 Send Reservation Request' : isOffer ? '💲 Send My Offer' : '✉ Send Question'
 }
 
 function closeForm() {
@@ -867,6 +905,7 @@ async function submitForm() {
   if (!name)  { showError('Please enter your name.'); return }
   if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return }
   if (activeType === 'ask' && !message) { showError('Please type your question.'); return }
+  if (activeType === 'offer' && !message) { showError('Please enter your offer amount and details.'); return }
   if (FORMSPREE_URL.includes('YOUR_FORM_ID')) {
     showError('⚠ Form not yet configured. The seller needs to add their Formspree ID.')
     return
@@ -989,6 +1028,11 @@ function buildCard(item) {
   if (sold)      reserveBtn=`<button class="btn-reserve sold" disabled>✕ Sold</button>`
   else if (pend) reserveBtn=`<button class="btn-reserve pending-btn" disabled>⏳ Pending</button>`
   else           reserveBtn=`<button class="btn-reserve" onclick="openForm(${item.id},'reserve')">🏷 Reserve</button>`
+  const offerBtn = item.offer
+    ? sold
+      ? `<button class="btn-offer" style="opacity:0.4;cursor:not-allowed" disabled>💲 Offer</button>`
+      : `<button class="btn-offer" onclick="openForm(${item.id},'offer')">💲 Offer</button>`
+    : ''
   const askBtn = sold
     ? `<button class="btn-ask" style="opacity:0.4;cursor:not-allowed" disabled>✉ Ask</button>`
     : `<button class="btn-ask" onclick="openForm(${item.id},'ask')">✉ Ask</button>`
@@ -1001,7 +1045,7 @@ function buildCard(item) {
       <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
       <button class="btn-details" onclick="openItemModal(${item.id})">🔍 <span>VIEW DETAILS & PHOTOS</span></button>
     </div>
-    <div class="card-actions">${reserveBtn}${askBtn}</div>
+    <div class="card-actions">${reserveBtn}${askBtn}${offerBtn}</div>
   </div></div>`
 }
 
@@ -1281,6 +1325,43 @@ function modalCarouselGo(dot,idx,e) {
   car.dataset.index=idx
   car.querySelector('.carousel-track').style.transform=`translateX(-${idx*100}%)`
   car.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active',i===idx))
+}
+
+// EMAIL SIGNUP
+async function submitSignup(e) {
+  e.preventDefault()
+  const name  = document.getElementById('signupName').value.trim()
+  const email = document.getElementById('signupEmail').value.trim()
+  const btn   = document.getElementById('signupBtn')
+  const msg   = document.getElementById('signupMsg')
+  if (!email || !email.includes('@')) {
+    msg.textContent = 'Please enter a valid email address.'
+    msg.className = 'signup-msg error'
+    return
+  }
+  btn.disabled = true
+  btn.textContent = 'Sending...'
+  try {
+    const res = await fetch('https://formspree.io/f/xeeldkoa', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name: name || 'New Subscriber', email, _subject: '📬 New List Signup — 5 & Dime Online Deals', message: `${name || 'Someone'} signed up to be notified of new deals.` })
+    })
+    if (res.ok) {
+      msg.textContent = '✅ You\'re on the list! Watch your inbox for new deals.'
+      msg.className = 'signup-msg success'
+      document.getElementById('signupName').value = ''
+      document.getElementById('signupEmail').value = ''
+      btn.textContent = '✓ Signed Up!'
+    } else {
+      throw new Error()
+    }
+  } catch {
+    msg.textContent = 'Something went wrong. Try again.'
+    msg.className = 'signup-msg error'
+    btn.disabled = false
+    btn.textContent = '🔔 Notify Me'
+  }
 }
 
 // iOS body-lock — prevents pull-to-refresh and snap-back on modal sheets
