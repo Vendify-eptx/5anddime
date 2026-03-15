@@ -1005,7 +1005,7 @@ document.addEventListener('keydown',e=>{
 })
 
 // LIGHTBOX — swipe left/right + tap to zoom
-let touchX=0, touchY=0, touchMoved=false, lbZoomed=false
+let touchX=0, touchY=0, touchMoved=false, lbZoomed=false, lastTouch=0
 
 const lbImg = document.getElementById('lb-img')
 
@@ -1022,13 +1022,14 @@ lbImg.addEventListener('touchmove', e=>{
 }, {passive:true})
 
 lbImg.addEventListener('touchend', e=>{
+  lastTouch = Date.now() // mark that a touch just happened
   const dx = touchX - e.changedTouches[0].clientX
   if (touchMoved && Math.abs(dx) > 40 && !lbZoomed) {
     lbNav(dx > 0 ? 1 : -1)
     return
   }
   if (!touchMoved) {
-    // Tap to zoom
+    e.preventDefault() // block the ghost click that fires after touchend
     if (!lbZoomed) {
       const rect = lbImg.getBoundingClientRect()
       const ox = ((e.changedTouches[0].clientX - rect.left) / rect.width  * 100).toFixed(1)
@@ -1043,8 +1044,9 @@ lbImg.addEventListener('touchend', e=>{
   }
 })
 
+// Desktop mouse click only — skip if a touch just happened
 lbImg.addEventListener('click', e=>{
-  if (touchMoved) return // already handled by touch
+  if (Date.now() - lastTouch < 500) return // ghost click from touch, ignore
   if (!lbZoomed) {
     const rect = lbImg.getBoundingClientRect()
     const ox = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1)
@@ -1161,9 +1163,21 @@ function bodyUnlock() {
 
 // Prevent overlay touchmove from reaching browser chrome (stops snap-back)
 document.getElementById('itemOverlay').addEventListener('touchmove', function(e) {
-  const modal = document.getElementById('itemModalInner')
-  if (modal && modal.scrollHeight > modal.clientHeight) return
-  e.preventDefault()
+  const modal = this.querySelector('.item-modal')
+  if (modal) {
+    const atTop = modal.scrollTop === 0
+    const atBottom = modal.scrollTop + modal.clientHeight >= modal.scrollHeight
+    const scrollingUp = e.touches[0].clientY > touchY
+    const scrollingDown = e.touches[0].clientY < touchY
+    // Allow scroll if modal has overflow and is not at boundary
+    if (modal.scrollHeight > modal.clientHeight) {
+      if ((atTop && scrollingUp) || (atBottom && scrollingDown)) {
+        e.preventDefault() // at boundary, block
+      }
+      return // otherwise let it scroll
+    }
+  }
+  e.preventDefault() // no overflow, block all
 }, { passive: false })
 
 render()
