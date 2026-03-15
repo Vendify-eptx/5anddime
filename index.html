@@ -333,6 +333,15 @@
   .back-to-top{position:fixed;bottom:24px;right:24px;width:46px;height:46px;background:#c0392b;border:2px solid #f5c500;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:999;box-shadow:3px 4px 12px #00000066;font-size:20px;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;transform:translateY(10px);}
   .back-to-top.visible{opacity:1;pointer-events:all;transform:translateY(0);}
   .back-to-top:hover{background:#a0201a;transform:translateY(-3px);}
+
+  /* ACCORDION */
+  .card-details{overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1),opacity 0.3s;opacity:0;padding:0 16px;}
+  .card-details.open{max-height:600px;opacity:1;padding:0 16px 10px;}
+  .card-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+  .btn-details{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;margin:4px 0 0;}
+  .btn-details:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .btn-details-arrow{transition:transform 0.3s;display:inline-block;}
+  .btn-details.open .btn-details-arrow{transform:rotate(180deg);}
 </style>
 </head>
 <body>
@@ -912,6 +921,11 @@ function buildCard(item) {
       <div class="card-title">${item.title}</div>
     ${item.retailPrice ? `<div class="retail-compare"><span class="retail-was">Retail $${item.retailPrice}</span><span class="retail-yours">Your Price $${item.price}</span><span class="retail-savings">SAVE $${(item.retailPrice - item.price).toFixed(2)} · That's ${Math.round((item.retailPrice - item.price) / item.retailPrice * 100)}% OFF!</span></div>` : ''}
       <span class="card-condition ${c.cls}">${c.icon} ${c.label}</span>
+      <button class="btn-details" onclick="toggleDetails(this)">
+        <span class="btn-details-arrow">▼</span> <span class="btn-details-label">VIEW DETAILS</span>
+      </button>
+    </div>
+    <div class="card-details">
       <p class="card-desc">${item.desc}</p>
     </div>
     <div class="card-actions">${reserveBtn}${askBtn}</div>
@@ -966,6 +980,17 @@ document.getElementById('lightbox').addEventListener('touchend',  e=>{
   const d=touchX-e.changedTouches[0].clientX
   if(Math.abs(d)>40) lbNav(d>0?1:-1)
 })
+
+function toggleDetails(btn) {
+  const details = btn.closest('.card-body').nextElementSibling;
+  const isOpen = details.classList.contains('open');
+  details.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  const arrow = btn.querySelector('.btn-details-arrow');
+  const label = btn.querySelector('.btn-details-label');
+  arrow.textContent = isOpen ? '▼' : '▲';
+  label.textContent = isOpen ? 'VIEW DETAILS' : 'HIDE DETAILS';
+}
 
 render()
 
